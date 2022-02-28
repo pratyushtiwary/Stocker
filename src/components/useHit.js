@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import axios from "axios";
 
 export const hitURL = "https://stocker-be-api.herokuapp.com";
