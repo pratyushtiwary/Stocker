@@ -11,6 +11,7 @@ def get_nse_announcements():
     r = requests.get("http://feeds.feedburner.com/nseindia/ann")
     data = xmltodict.parse(r.text)
     final = []
+    time = None
     for item in data["rss"]["channel"]["item"]:
         time = datetime.strptime(item["pubDate"],"%a, %d %b %Y %H:%M:%S PST")
         current_time = datetime.now()
@@ -20,7 +21,7 @@ def get_nse_announcements():
             "link": item["link"],
             "pubDate": item["pubDate"]
         })
-    return final[0:5]
+    return (final[0:5],time.weekday())
 
 def get_bse_notices():
     headers = {
@@ -38,6 +39,7 @@ def get_bse_notices():
     r = requests.get("https://www.bseindia.com/data/xml/notices.xml",headers=headers)
     data = xmltodict.parse(r.content)
     final = []
+    time = None
     for item in data["rss"]["channel"]["item"]:
         time = datetime.strptime(item["pubDate"],"%a, %d %b %Y %H:%M:%S %Z")
         current_time = datetime.now()
@@ -48,7 +50,7 @@ def get_bse_notices():
             "pubDate": item["pubDate"]
         })
     
-    return final[0:5]
+    return (final[0:5],time.weekday())
 
 mails = [
     {
@@ -70,12 +72,14 @@ def send_mail(receiver_emails):
         msg["Subject"] = "Stocker Daily Update"
         msg["From"] = sender["email"]
         msg["To"] = ", ".join(receiver_emails)
+        nse_announcements = get_nse_announcements()
+        bse_notices = get_bse_notices()
+        if nse_announcements[1] == current_time.weekday() and bse_notices[1] == current_time.weekday():
+            html = render_mail_template(nse_announcements[0],bse_notices[0])
 
-        html = render_mail_template(get_nse_announcements(),get_bse_notices())
-
-        part = MIMEText(html, "html")
-        msg.attach(part)
-        context = ssl.create_default_context()
-        with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as server:
-            server.login(sender["email"], sender["password"])
-            server.sendmail(sender["email"],receiver_emails,msg.as_string())
+            part = MIMEText(html, "html")
+            msg.attach(part)
+            context = ssl.create_default_context()
+            with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as server:
+                server.login(sender["email"], sender["password"])
+                server.sendmail(sender["email"],receiver_emails,msg.as_string())
