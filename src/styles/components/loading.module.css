@@ -1,0 +1,45 @@
+.loading {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: grid;
+  align-items: center;
+  justify-content: center;
+  cursor: progress;
+  z-index: 999;
+}
+
+.loading .opacity {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);
+  z-index: 1;
+}
+
+.loading .loader {
+  z-index: 2;
+  border-radius: 5px;
+  background-color: #fff;
+  padding: 20px 10px;
+  animation: blink 1s linear infinite;
+  text-align: center;
+  width: 95vw;
+  max-width: fit-content;
+  font-size: 2rem;
+}
+
+@keyframes blink {
+  0% {
+    color: black;
+  }
+  50% {
+    color: white;
+  }
+  100% {
+    color: black;
+  }
+}

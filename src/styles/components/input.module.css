@@ -1,0 +1,49 @@
+.input {
+  position: relative;
+  margin: 10px 0;
+  border: 1px solid var(--primaryColor);
+  width: 100%;
+  border-radius: 10px 50px 50px 10px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+}
+
+.input label {
+  position: absolute;
+  font-size: 1rem;
+  font-weight: bold;
+  margin-left: 9px;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: 0.15s linear;
+}
+
+.input input {
+  padding: 10px;
+  border: none;
+  outline: none;
+  height: 50.5px;
+  font-size: 1rem;
+  font-family: "Nunito", sans-serif;
+  background-color: transparent;
+}
+
+.input button {
+  padding: 10px;
+  border-radius: 50%;
+  font-size: 1.25rem;
+  font-weight: bold;
+  background-color: var(--primaryColor);
+  border: none;
+  color: white;
+  width: 52.5px;
+  height: 52.5px;
+}
+
+.input label.float {
+  top: 0;
+  font-size: 0.9rem;
+  background-color: #fff;
+  padding: 0 5px;
+  margin-left: 7.5px;
+}
