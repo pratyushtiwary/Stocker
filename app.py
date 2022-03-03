@@ -15,6 +15,7 @@ db.create_all()
 def send_mails():
     if request.method == "POST":
         data = request.data
+        print(data)
         data = json.loads(data.decode("utf-8"))
         token = data.get("token")
         # 39u301203m9c209m2090
