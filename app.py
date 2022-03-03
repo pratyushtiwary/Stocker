@@ -1,5 +1,7 @@
 from flask import Flask, request, Response
+import hashlib
 import json
+from utils import send_mail
 
 app = Flask(__name__)
 
@@ -8,6 +10,25 @@ from conn import db
 from model.Emails import Emails
 
 db.create_all()
+
+@app.route("/api/sendMails",methods=["GET","POST"])
+def send_mails():
+    if request.method == "POST":
+        token = request.json.get("token")
+        # 39u301203m9c209m2090
+        if hashlib.sha256(bytes(token,"utf-8")).hexdigest() == "bb7714c0c3b8bcdedfbacb759266f027dfdbf39cdb80a3e0d6c40788d876c886":
+            emails = Emails.select_all()
+            final = []
+            for email in emails:
+                final.append(email.email)
+            if len(emails)>0:
+                send_mail(final)
+                return Response(json.dumps({"status":"success"}),status=200,mimetype="application/json")
+        else:
+            return Response(json.dumps({"status":"error","message":"Invalid token"}),status=400,mimetype="application/json")
+    else:
+        return Response(json.dumps({"status":"error","message":"Invalid request"}),status=400,mimetype="application/json")
+
 
 @app.route('/api/save',methods=["GET","POST"])
 def save_email():
