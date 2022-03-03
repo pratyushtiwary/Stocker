@@ -24,6 +24,8 @@ def send_mails():
             if len(emails)>0:
                 send_mail(final)
                 return Response(json.dumps({"status":"success"}),status=200,mimetype="application/json")
+            else:
+                return Response(json.dumps({"status":"error","message":"No emails found"}),status=200,mimetype="application/json")
         else:
             return Response(json.dumps({"status":"error","message":"Invalid token"}),status=400,mimetype="application/json")
     else:
