@@ -14,7 +14,9 @@ db.create_all()
 @app.route("/api/sendMails",methods=["GET","POST"])
 def send_mails():
     if request.method == "POST":
-        token = request.form.get("token")
+        data = request.data
+        data = json.loads(data.decode("utf-8"))
+        token = data.get("token")
         # 39u301203m9c209m2090
         if hashlib.sha256(bytes(token,"utf-8")).hexdigest() == "bb7714c0c3b8bcdedfbacb759266f027dfdbf39cdb80a3e0d6c40788d876c886":
             emails = Emails.select_all()
