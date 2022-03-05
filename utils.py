@@ -14,8 +14,6 @@ def get_nse_announcements():
     time = None
     for item in data["rss"]["channel"]["item"]:
         time = datetime.strptime(item["pubDate"],"%a, %d %b %Y %H:%M:%S PST")
-        current_time = datetime.now()
-        # if time.day == current_time.day:
         final.append({
             "title": item["title"],
             "link": item["link"],
@@ -40,15 +38,24 @@ def get_bse_notices():
     data = xmltodict.parse(r.content)
     final = []
     time = None
-    for item in data["rss"]["channel"]["item"]:
+    items = data["rss"]["channel"]["item"]
+    if items.get("title",False):
+        # single notice
+        item = items
         time = datetime.strptime(item["pubDate"],"%a, %d %b %Y %H:%M:%S %Z")
-        current_time = datetime.now()
-        # if time.day == current_time.day:
         final.append({
             "title": item["title"],
             "link": item["link"],
             "pubDate": item["pubDate"]
         })
+    else:
+        for item in items:
+            time = datetime.strptime(item["pubDate"],"%a, %d %b %Y %H:%M:%S %Z")
+            final.append({
+                "title": item["title"],
+                "link": item["link"],
+                "pubDate": item["pubDate"]
+            })
     
     return (final[0:5],time.weekday())
 
