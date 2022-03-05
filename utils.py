@@ -71,7 +71,8 @@ def send_mail(receiver_emails):
         msg = MIMEMultipart("alternative")
         msg["Subject"] = "Stocker Daily Update"
         msg["From"] = sender["email"]
-        msg["To"] = ", ".join(receiver_emails)
+        msg["To"] = sender["email"]
+        msg["BCC"] = ", ".join(receiver_emails) 
         nse_announcements = get_nse_announcements()
         bse_notices = get_bse_notices()
         if nse_announcements[1] == current_time.weekday() and bse_notices[1] == current_time.weekday():

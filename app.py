@@ -21,7 +21,7 @@ def send_mails():
             final = []
             for email in emails:
                 final.append(email.email)
-            if len(emails)>0:
+            if len(final)>0:
                 send_mail(final)
                 return Response(json.dumps({"status":"success"}),status=200,mimetype="application/json")
             else:
