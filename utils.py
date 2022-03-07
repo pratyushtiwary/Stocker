@@ -39,7 +39,7 @@ def get_bse_notices():
     final = []
     time = None
     items = data["rss"]["channel"]["item"]
-    if items.get("title",False):
+    if type(items)==list:
         # single notice
         item = items
         time = datetime.strptime(item["pubDate"],"%a, %d %b %Y %H:%M:%S %Z")
