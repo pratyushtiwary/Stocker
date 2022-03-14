@@ -3,6 +3,7 @@ import xmltodict
 from datetime import datetime
 import random
 import smtplib, ssl
+import re
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from mail_template.template import render_mail_template
@@ -13,7 +14,9 @@ def get_nse_announcements():
     final = []
     time = None
     for item in data["rss"]["channel"]["item"]:
-        time = datetime.strptime(item["pubDate"],"%a, %d %b %Y %H:%M:%S PST")
+        ext = re.split(r"\s+([a-zA-Z]*)$",item["pubDate"])
+        timeFmt = "%a, %d %b %Y %H:%M:%S "+ext[1]
+        time = datetime.strptime(item["pubDate"],timeFmt)
         final.append({
             "title": item["title"],
             "link": item["link"],
